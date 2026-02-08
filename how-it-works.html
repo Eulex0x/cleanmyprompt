@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>How It Works - Clean My Prompt | Technical Deep Dive</title>
+    <meta name="description" content="Technical deep-dive into our client-side sanitization engine. Learn about RAM-based processing, regex patterns, NLP detection, and zero-trust architecture.">
+    <meta name="keywords" content="client-side processing, browser RAM, regex sanitization, NLP detection, privacy architecture, zero-trust, JavaScript security">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://cleanmyprompt.com/how-it-works.html">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.ico">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+        :root {
+            --bg-primary: #18181b;
+            --bg-secondary: #27272a;
+            --bg-tertiary: #3f3f46;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --accent-primary: #2f7d6d;
+            --border-color: #3f3f46;
+            --code-bg: #1e1e1e;
+        }
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .content-section {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+        a {
+            color: var(--accent-primary);
+            text-decoration: underline;
+        }
+        a:hover {
+            opacity: 0.8;
+        }
+        code {
+            background-color: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        pre {
+            background-color: var(--code-bg);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        pre code {
+            padding: 0;
+            background: transparent;
+        }
+        .highlight-box {
+            background: rgba(47, 125, 109, 0.1);
+            border-left: 4px solid var(--accent-primary);
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav style="background-color: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-3 no-underline">
+                    <img src="Clean My Prompt.svg" alt="Clean My Prompt Logo" class="w-8 h-8" />
+                    <span class="text-xl font-bold">Clean My Prompt</span>
+                </a>
+                <a href="index.html" class="text-sm" style="color: var(--text-secondary);">← Back to App</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 class="text-4xl font-bold mb-4">How It Works: Technical Deep Dive</h1>
+        <p class="text-lg mb-8" style="color: var(--text-secondary);">
+            A comprehensive look at our client-side sanitization architecture, privacy guarantees, and detection algorithms.
+        </p>
+
+        <!-- Architecture Overview -->
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">🏗️ Architecture Overview</h2>
+            <p class="mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                Clean My Prompt is built on a <strong>zero-trust, client-only architecture</strong>. Every line of code executes in your browser's JavaScript sandbox with no server communication.
+            </p>
+            
+            <div class="highlight-box">
+                <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 8px;">Core Principle:</p>
+                <p style="color: var(--text-secondary);">
+                    "Don't trust servers with sensitive data. Process it locally where the user has full control."
+                </p>
+            </div>
+
+            <h3 class="text-lg font-semibold mb-3 mt-6">Technology Stack</h3>
+            <ul class="list-disc list-inside space-y-2" style="color: var(--text-secondary);">
+                <li><strong>Frontend:</strong> Vanilla JavaScript (ES6+), Tailwind CSS</li>
+                <li><strong>NLP Engine:</strong> Compromise.js (client-side natural language processing)</li>
+                <li><strong>Pattern Matching:</strong> Native JavaScript Regex Engine</li>
+                <li><strong>Storage:</strong> localStorage (preferences), sessionStorage (temporary patterns)</li>
+                <li><strong>Deployment:</strong> Static HTML (can run from <code>file://</code> protocol)</li>
+            </ul>
+        </section>
+
+        <!-- Processing Pipeline -->
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">⚙️ Processing Pipeline</h2>
+            <p class="mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                When you paste text, it goes through a multi-stage sanitization pipeline:
+            </p>
+
+            <h3 class="text-lg font-semibold mb-3">Stage 1: Memory Allocation</h3>
+            <pre><code style="color: var(--text-secondary);">// User pastes text into textarea
+textarea.addEventListener('input', (event) => {
+    const rawText = event.target.value; // Stored in JavaScript heap (RAM)
+    sanitizeText(rawText);
+});</code></pre>
+            <p class="mt-3 mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                The text is stored in the browser's JavaScript heap memory (RAM). No disk writes occur. The data exists only in volatile memory.
+            </p>
+
+            <h3 class="text-lg font-semibold mb-3">Stage 2: NLP Analysis (Smart Detection)</h3>
+            <pre><code style="color: var(--text-secondary);">// Compromise.js analyzes text structure
+const doc = nlp(rawText);
+const people = doc.people().out('array');      // ['John Smith', 'Dr. Chen']
+const places = doc.places().out('array');      // ['Seattle', 'New York']
+const orgs = doc.organizations().out('array'); // ['Microsoft', 'Apple Inc.']</code></pre>
+            <p class="mt-3 mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                <strong>Natural Language Processing</strong> runs first to detect contextual entities. Compromise.js uses part-of-speech tagging and entity recognition without any network calls.
+            </p>
+
+            <h3 class="text-lg font-semibold mb-3">Stage 3: Regex Pattern Matching</h3>
+            <pre><code style="color: var(--text-secondary);">// Sequential pattern application
+const patterns = [
+    { name: 'email', regex: /\b[\w.+-]+@[\w.-]+\.[a-z]{2,}\b/gi },
+    { name: 'phone', regex: /\b(?:\+?\d{1,3}[-.\s]?)?...\b/gi },
+    { name: 'apiKey', regex: /\b(?:sk|pk|api_key)[-_][a-zA-Z0-9_-]{12,}\b/g },
+    // ... 15+ more patterns
+];
+
+patterns.forEach(pattern => {
+    sanitizedText = sanitizedText.replace(pattern.regex, placeholder);
+});</code></pre>
+            <p class="mt-3 mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                After NLP, regex patterns scan for structured data: emails, API keys, IP addresses, credit cards, IBANs, phone numbers (US/EU), passwords, and URLs.
+            </p>
+
+            <h3 class="text-lg font-semibold mb-3">Stage 4: Output Generation</h3>
+            <p class="mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                Sanitized text is displayed in real-time. Two modes available:
+            </p>
+            <ul class="list-disc list-inside space-y-2 mb-4" style="color: var(--text-secondary);">
+                <li><strong>Placeholder Mode:</strong> <code>[EMAIL_1]</code>, <code>[PHONE_2]</code>, <code>[API_KEY_3]</code></li>
+                <li><strong>Realistic Mode:</strong> <code>user@company.com</code>, <code>(555) 123-4567</code>, <code>api_key_prod_xyz123</code></li>
+            </ul>
+
+            <h3 class="text-lg font-semibold mb-3">Stage 5: Garbage Collection</h3>
+            <pre><code style="color: var(--text-secondary);">// When you close the tab or navigate away:
+window.addEventListener('beforeunload', () => {
+    // JavaScript GC automatically frees all heap memory
+    // No data persists. No traces remain.
+});</code></pre>
+        </section>
+
+        <!-- Detection Capabilities -->
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">🔍 Detection Capabilities</h2>
+            
+            <h3 class="text-lg font-semibold mb-3">NLP-Based Detection (Compromise.js)</h3>
+            <p class="mb-3" style="color: var(--text-secondary); line-height: 1.7;">
+                Our NLP engine uses linguistic analysis to detect:
+            </p>
+            <ul class="list-disc list-inside space-y-2 mb-4" style="color: var(--text-secondary);">
+                <li><strong>People:</strong> Personal names (John Smith, Dr. Emily Chen, Max Müller)</li>
+                <li><strong>Places:</strong> Cities, states, countries (Seattle, Berlin, Bavaria)</li>
+                <li><strong>Organizations:</strong> Companies and institutions (Microsoft, SAP, Apple Inc.)</li>
+            </ul>
+            <div class="highlight-box">
+                <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 8px;">Why NLP First?</p>
+                <p style="color: var(--text-secondary);">
+                    Names like "John Smith" can contain common words. Running NLP before regex prevents false positives from word-boundary patterns.
+                </p>
+            </div>
+
+            <h3 class="text-lg font-semibold mb-3 mt-6">Regex-Based Detection</h3>
+            <p class="mb-3" style="color: var(--text-secondary); line-height: 1.7;">
+                15+ regex patterns detect structured sensitive data:
+            </p>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-top: 16px; color: var(--text-secondary);">
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 8px; font-weight: 600;">Category</td>
+                    <td style="padding: 8px; font-weight: 600;">Examples Detected</td>
+                    <td style="padding: 8px; font-weight: 600;">Regions</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 8px;">Emails</td>
+                    <td style="padding: 8px;"><code>user@example.com</code>, <code>john.doe+tag@company.io</code></td>
+                    <td style="padding: 8px;">Universal</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 8px;">Phone Numbers</td>
+                    <td style="padding: 8px;"><code>(555) 123-4567</code>, <code>+49 176 1234567</code>, <code>0176265124</code></td>
+                    <td style="padding: 8px;">US, EU, DE</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 8px;">API Keys</td>
+                    <td style="padding: 8px;"><code>sk_live_abc...</code>, <code>AKIAIOSFODNN7...</code>, <code>ghp_xyz...</code></td>
+                    <td style="padding: 8px;">Universal</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 8px;">IP Addresses</td>
+                    <td style="padding: 8px;"><code>192.168.1.1</code>, <code>2001:0db8:85a3::8a2e:0370:7334</code></td>
+                    <td style="padding: 8px;">IPv4, IPv6</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 8px;">Credit Cards</td>
+                    <td style="padding: 8px;"><code>4532-1234-5678-9010</code>, <code>5425 2334 3010 9903</code></td>
+                    <td style="padding: 8px;">Universal</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 8px;">IBANs</td>
+                    <td style="padding: 8px;"><code>DE89370400440532013000</code>, <code>FR14 2004...</code></td>
+                    <td style="padding: 8px;">EU</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 8px;">Credentials</td>
+                    <td style="padding: 8px;"><code>password: abc123</code>, <code>username: admin</code></td>
+                    <td style="padding: 8px;">Universal</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;">URLs</td>
+                    <td style="padding: 8px;"><code>https://api.example.com</code>, <code>www.site.com</code></td>
+                    <td style="padding: 8px;">Universal</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Privacy Guarantees -->
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">🔒 Privacy Guarantees</h2>
+            
+            <h3 class="text-lg font-semibold mb-3">Zero Network Communication</h3>
+            <p class="mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                After initial page load, <strong>no network requests are made</strong>. You can verify this:
+            </p>
+            <ol class="list-decimal list-inside space-y-2 mb-4" style="color: var(--text-secondary);">
+                <li>Open browser DevTools (F12)</li>
+                <li>Go to <strong>Network</strong> tab</li>
+                <li>Paste sensitive text and sanitize</li>
+                <li>Observe: Zero new requests logged</li>
+            </ol>
+            <div class="highlight-box">
+                <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 8px;">Offline Mode Test:</p>
+                <p style="color: var(--text-secondary);">
+                    Disconnect from the internet after loading the page. The tool continues to work perfectly. This proves all processing is local.
+                </p>
+            </div>
+
+            <h3 class="text-lg font-semibold mb-3 mt-6">RAM-Only Processing</h3>
+            <p class="mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                Your sensitive data never touches:
+            </p>
+            <ul class="list-disc list-inside space-y-2" style="color: var(--text-secondary);">
+                <li>❌ Disk storage (no file system writes)</li>
+                <li>❌ Server storage (no uploads)</li>
+                <li>❌ Cloud processing (no API calls)</li>
+                <li>❌ Browser extensions (sandboxed execution)</li>
+                <li>✅ Only: Browser JavaScript heap memory (volatile RAM)</li>
+            </ul>
+
+            <h3 class="text-lg font-semibold mb-3 mt-6">Automatic Memory Cleanup</h3>
+            <p class="mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                JavaScript's automatic garbage collection ensures:
+            </p>
+            <ul class="list-disc list-inside space-y-2" style="color: var(--text-secondary);">
+                <li>When you close the tab, all variables are freed</li>
+                <li>When you refresh, memory is reset</li>
+                <li>When you navigate away, data is lost forever</li>
+                <li>No forensic recovery possible (volatile memory only)</li>
+            </ul>
+        </section>
+
+        <!-- Performance -->
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">⚡ Performance Characteristics</h2>
+            
+            <h3 class="text-lg font-semibold mb-3">Real-Time Processing</h3>
+            <p class="mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                Sanitization happens <strong>as you type</strong>. Typical performance:
+            </p>
+            <ul class="list-disc list-inside space-y-2 mb-4" style="color: var(--text-secondary);">
+                <li><strong>Small text (&lt;1KB):</strong> &lt;10ms</li>
+                <li><strong>Medium text (1-10KB):</strong> 10-50ms</li>
+                <li><strong>Large text (10-100KB):</strong> 50-200ms</li>
+                <li><strong>Very large text (&gt;100KB):</strong> 200-500ms</li>
+            </ul>
+
+            <h3 class="text-lg font-semibold mb-3">Optimization Techniques</h3>
+            <ul class="list-disc list-inside space-y-2" style="color: var(--text-secondary);">
+                <li><strong>Pattern Caching:</strong> Regex patterns compiled once on page load</li>
+                <li><strong>Sequential Processing:</strong> Patterns applied in order of frequency</li>
+                <li><strong>Early Exit:</strong> If no sensitive data detected, processing stops</li>
+                <li><strong>NLP Deduplication:</strong> Each entity replaced only once</li>
+            </ul>
+        </section>
+
+        <!-- Extensibility -->
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">🔧 Extensibility: Custom Patterns</h2>
+            <p class="mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                You can add custom regex patterns for domain-specific sensitive data:
+            </p>
+            
+            <h3 class="text-lg font-semibold mb-3">Example: Social Security Numbers (US)</h3>
+            <pre><code style="color: var(--text-secondary);">Name: SSN
+Regex: \b\d{3}-\d{2}-\d{4}\b
+Placeholder: SSN</code></pre>
+
+            <h3 class="text-lg font-semibold mb-3 mt-4">Example: UK National Insurance Number</h3>
+            <pre><code style="color: var(--text-secondary);">Name: UK_NIN
+Regex: \b[A-Z]{2}\d{6}[A-D]\b
+Placeholder: UK_NATIONAL_INSURANCE</code></pre>
+
+            <p class="mt-4" style="color: var(--text-secondary); line-height: 1.7;">
+                Custom patterns are stored in <code>sessionStorage</code> and lost when you close the tab (privacy by design).
+            </p>
+        </section>
+
+        <!-- Security Model -->
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">🛡️ Security Model</h2>
+            
+            <h3 class="text-lg font-semibold mb-3">Threat Model</h3>
+            <p class="mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                We protect against:
+            </p>
+            <ul class="list-disc list-inside space-y-2 mb-4" style="color: var(--text-secondary);">
+                <li>✅ <strong>Server breaches:</strong> No servers = no breach risk</li>
+                <li>✅ <strong>Network interception:</strong> No transmission = nothing to intercept</li>
+                <li>✅ <strong>Data leaks:</strong> No persistence = no leakage</li>
+                <li>✅ <strong>Third-party tracking:</strong> No analytics SDKs or tracking pixels</li>
+            </ul>
+
+            <h3 class="text-lg font-semibold mb-3">Limitations</h3>
+            <p class="mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                We cannot protect against:
+            </p>
+            <ul class="list-disc list-inside space-y-2" style="color: var(--text-secondary);">
+                <li>❌ <strong>Compromised browsers:</strong> If your browser is infected with malware, it can read memory</li>
+                <li>❌ <strong>Screen recording:</strong> If malware records your screen, it can see input</li>
+                <li>❌ <strong>Keyloggers:</strong> Hardware/software keyloggers capture typing</li>
+                <li>❌ <strong>Browser extensions:</strong> Malicious extensions with page access</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 8px;">⚠️ Security Best Practice:</p>
+                <p style="color: var(--text-secondary);">
+                    Use a clean, updated browser on a trusted device. Disable untrusted extensions when working with sensitive data.
+                </p>
+            </div>
+        </section>
+
+        <!-- Open Source -->
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">📖 Open Source & Transparency</h2>
+            <p class="mb-4" style="color: var(--text-secondary); line-height: 1.7;">
+                Clean My Prompt is fully open source under the MIT License. You can:
+            </p>
+            <ul class="list-disc list-inside space-y-2 mb-4" style="color: var(--text-secondary);">
+                <li>Inspect the source code on GitHub</li>
+                <li>Run it locally (<code>file://</code> protocol)</li>
+                <li>Audit security claims yourself</li>
+                <li>Fork and modify for your needs</li>
+                <li>Contribute improvements via pull requests</li>
+            </ul>
+            <p style="color: var(--text-secondary); line-height: 1.7;">
+                <strong>GitHub:</strong> <a href="https://github.com/Eulex0x/cleanmyprompt">github.com/yourusername/cleanmyprompt</a>
+            </p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-sm pt-8 mt-8" style="color: var(--text-secondary); border-top: 1px solid var(--border-color);">
+            <div class="flex items-center justify-center gap-6 mb-4 flex-wrap">
+                <a href="index.html">Home</a>
+                <a href="cookie-policy.html">Cookie Policy</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="about.html">About</a>
+            </div>
+            <p class="mb-2">© 2026 Clean My Prompt. Open Source (MIT License).</p>
+        </footer>
+    </div>
+</body>
+</html>

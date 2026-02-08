@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Clean My Prompt</title>
+    <meta name="description" content="Our privacy policy: We don't collect, store, or transmit your data. Everything happens locally in your browser. Zero tracking, zero data retention.">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.ico">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #18181b; color: #fafafa; }
+        .content-section { background-color: #27272a; border: 1px solid #3f3f46; }
+        a { color: #2f7d6d; text-decoration: underline; }
+        a:hover { opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <nav style="background-color: #27272a; border-bottom: 1px solid #3f3f46;">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-3 no-underline">
+                    <img src="Clean My Prompt.svg" alt="Clean My Prompt Logo" class="w-8 h-8" />
+                    <span class="text-xl font-bold">Clean My Prompt</span>
+                </a>
+                <a href="index.html" class="text-sm" style="color: #a1a1aa;">← Back to App</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 class="text-4xl font-bold mb-4">Privacy Policy</h1>
+        <p class="text-sm mb-8" style="color: #a1a1aa;">Last Updated: February 8, 2026</p>
+
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Our Privacy Promise</h2>
+            <p class="mb-4" style="color: #a1a1aa; line-height: 1.7;">
+                <strong style="color: #2f7d6d; font-size: 1.2em;">We don't collect your data. Period.</strong>
+            </p>
+            <p style="color: #a1a1aa; line-height: 1.7;">
+                Clean My Prompt is built on a simple principle: <strong>your sensitive data should never leave your device</strong>. 
+                We achieve this through 100% client-side processing. Everything happens in your browser's memory. Nothing is uploaded, stored, or transmitted.
+            </p>
+        </section>
+
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">What Data We DON'T Collect</h2>
+            <ul class="list-disc list-inside space-y-2" style="color: #a1a1aa;">
+                <li>❌ Your prompts or sanitized text</li>
+                <li>❌ Personally identifiable information (PII)</li>
+                <li>❌ IP addresses (even anonymized)</li>
+                <li>❌ Browser fingerprints</li>
+                <li>❌ User accounts or emails</li>
+                <li>❌ Behavioral data or click tracking</li>
+                <li>❌ Cookies for tracking purposes</li>
+                <li>❌ Analytics beyond country-level aggregates</li>
+            </ul>
+        </section>
+
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">What Data We DO Collect</h2>
+            <p class="mb-4" style="color: #a1a1aa; line-height: 1.7;">
+                We collect <strong>minimal, anonymous analytics</strong> to understand usage patterns:
+            </p>
+            <ul class="list-disc list-inside space-y-2 mb-4" style="color: #a1a1aa;">
+                <li><strong>Page views:</strong> Which pages are visited (not who visits them)</li>
+                <li><strong>Country-level location:</strong> Aggregated by country (e.g., "United States: 1,234 visits")</li>
+                <li><strong>Referral source:</strong> How users find us (Google, direct, social media)</li>
+            </ul>
+            <p style="color: #a1a1aa; line-height: 1.7;">
+                This data is collected <strong>anonymously</strong> and <strong>aggregated</strong>. We cannot identify individual users.
+            </p>
+        </section>
+
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">How Your Data is Processed</h2>
+            <h3 class="text-lg font-semibold mb-3" style="color: #2f7d6d;">Client-Side Only</h3>
+            <p class="mb-4" style="color: #a1a1aa; line-height: 1.7;">
+                When you paste text:
+            </p>
+            <ol class="list-decimal list-inside space-y-2 mb-4" style="color: #a1a1aa;">
+                <li>Text is stored in browser RAM (JavaScript heap memory)</li>
+                <li>Regex patterns and NLP algorithms process it locally</li>
+                <li>Sanitized output is generated in your browser</li>
+                <li>When you close the tab, all data is garbage collected</li>
+            </ol>
+            <p style="color: #a1a1aa; line-height: 1.7;">
+                <strong>Zero network requests</strong> are made during sanitization. You can verify this in browser DevTools.
+            </p>
+        </section>
+
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Cookies & Local Storage</h2>
+            <p class="mb-4" style="color: #a1a1aa; line-height: 1.7;">
+                We use minimal browser storage:
+            </p>
+            <ul class="list-disc list-inside space-y-2" style="color: #a1a1aa;">
+                <li><strong>localStorage.theme:</strong> Remembers your theme preference (dark/warm)</li>
+                <li><strong>localStorage.cookieConsent:</strong> Records your cookie consent choice</li>
+                <li><strong>sessionStorage.customPatterns:</strong> Your custom regex patterns (session only)</li>
+            </ul>
+            <p class="mt-4" style="color: #a1a1aa; line-height: 1.7;">
+                No tracking cookies. No third-party cookies. See our <a href="cookie-policy.html">Cookie Policy</a> for details.
+            </p>
+        </section>
+
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Third-Party Services</h2>
+            <p class="mb-4" style="color: #a1a1aa; line-height: 1.7;">
+                We load the following external libraries from public CDNs:
+            </p>
+            <ul class="list-disc list-inside space-y-2" style="color: #a1a1aa;">
+                <li><strong>Tailwind CSS:</strong> Styling framework (no tracking)</li>
+                <li><strong>Google Fonts:</strong> Inter font (no cookies, minimal analytics by Google)</li>
+                <li><strong>Compromise.js:</strong> NLP library from unpkg.com (no tracking)</li>
+            </ul>
+            <p class="mt-4" style="color: #a1a1aa; line-height: 1.7;">
+                These services may collect minimal usage data (e.g., font downloads), but they cannot access your sensitive text.
+            </p>
+        </section>
+
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">GDPR, CCPA & Data Rights</h2>
+            <p class="mb-4" style="color: #a1a1aa; line-height: 1.7;">
+                Since we don't collect personal data, most data rights are not applicable. However:
+            </p>
+            <ul class="list-disc list-inside space-y-2" style="color: #a1a1aa;">
+                <li><strong>Right to Access:</strong> All data is local. Check browser DevTools → Storage</li>
+                <li><strong>Right to Deletion:</strong> Clear browser cookies/storage</li>
+                <li><strong>Right to Portability:</strong> Export from browser storage (standard JSON format)</li>
+                <li><strong>Right to Object:</strong> Disable cookies in browser settings</li>
+            </ul>
+        </section>
+
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Children's Privacy</h2>
+            <p style="color: #a1a1aa; line-height: 1.7;">
+                Our service does not target children under 13. We do not knowingly collect data from children. 
+                Since we don't collect personal data at all, there's no risk of collecting children's data.
+            </p>
+        </section>
+
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Changes to This Policy</h2>
+            <p style="color: #a1a1aa; line-height: 1.7;">
+                We may update this policy from time to time. Changes will be posted on this page with an updated date. 
+                Material changes will be announced on our GitHub repository.
+            </p>
+        </section>
+
+        <section class="content-section rounded-xl p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Contact Us</h2>
+            <p class="mb-4" style="color: #a1a1aa; line-height: 1.7;">
+                Questions about privacy? Reach out via:
+            </p>
+            <ul class="space-y-2" style="color: #a1a1aa;">
+                <li><strong>GitHub:</strong> <a href="https://github.com/Eulex0x/cleanmyprompt">github.com/yourusername/cleanmyprompt</a></li>
+                <li><strong>Issues:</strong> Open a GitHub issue for privacy concerns</li>
+            </ul>
+        </section>
+
+        <footer class="text-center text-sm pt-8 mt-8" style="color: #a1a1aa; border-top: 1px solid #3f3f46;">
+            <div class="flex items-center justify-center gap-6 mb-4 flex-wrap">
+                <a href="index.html">Home</a>
+                <a href="how-it-works.html">Technical Details</a>
+                <a href="cookie-policy.html">Cookie Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="about.html">About</a>
+            </div>
+            <p class="mb-2">© 2026 Clean My Prompt. Open Source (MIT License).</p>
+        </footer>
+    </div>
+</body>
+</html>

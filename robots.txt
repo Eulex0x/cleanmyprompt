@@ -1,0 +1,11 @@
+# Clean My Prompt - Privacy-First AI Prompt Sanitizer
+# We welcome all search engine crawlers
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://cleanmyprompt.com/sitemap.xml
+
+# Crawl delay (be polite)
+Crawl-delay: 1

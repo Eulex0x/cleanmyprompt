@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Clean My Prompt - Privacy-First AI Prompt Sanitizer | Remove Sensitive Data</title>
+    <meta name="title" content="Clean My Prompt - Privacy-First AI Prompt Sanitizer | Remove Sensitive Data">
+    <meta name="description" content="Instantly remove emails, API keys, passwords, IPs, credit cards, and personal info from AI prompts. 100% offline client-side processing. No data leaves your browser. Free privacy tool for ChatGPT, Claude, and all AI assistants.">
+    <meta name="keywords" content="prompt sanitizer, AI privacy, data sanitization, offline tool, prompt cleaner, ChatGPT privacy, Claude security, remove PII, GDPR compliant, client-side encryption, password remover, API key detector, NLP sanitizer">
+    <meta name="author" content="Clean My Prompt">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://cleanmyprompt.com/">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.ico">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cleanmyprompt.com/">
+    <meta property="og:title" content="Clean My Prompt - Privacy-First AI Prompt Sanitizer">
+    <meta property="og:description" content="Remove sensitive data from AI prompts instantly. 100% offline & private. Supports emails, API keys, passwords, IPs, credit cards, and more.">
+    <meta property="og:site_name" content="Clean My Prompt">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://cleanmyprompt.com/">
+    <meta property="twitter:title" content="Clean My Prompt - Privacy-First AI Prompt Sanitizer">
+    <meta property="twitter:description" content="Remove sensitive data from AI prompts instantly. 100% offline & private.">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Clean My Prompt",
+      "description": "Privacy-first AI prompt sanitizer that removes sensitive data like emails, API keys, passwords, and personal information using client-side processing",
+      "url": "https://cleanmyprompt.com/",
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "Any (Web-based)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Client-side processing",
+        "Email detection and removal",
+        "API key sanitization",
+        "Password detection",
+        "IP address removal",
+        "Credit card masking",
+        "NLP-based name detection",
+        "Multi-language support",
+        "Zero data transmission"
+      ]
+    }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Compromise NLP - Lightweight client-side NLP -->
+    <script src="https://unpkg.com/compromise"></script>
+    <style>
+        /* Reset */
+        *, *::before, *::after { box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+        :root {
+            --bg-primary: #18181b;
+            --bg-secondary: #27272a;
+            --bg-tertiary: #3f3f46;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --accent-primary: #2f7d6d;
+            --accent-secondary: #286e60;
+            --border-color: #3f3f46;
+            --glass-bg: rgba(24, 24, 27, 0.6);
+            --badge-bg: rgba(47, 125, 109, 0.1);
+            --badge-border: rgba(47, 125, 109, 0.3);
+            --badge-text: #34d399;
+        }
+
+        [data-theme="warm"] {
+            --bg-primary: #f6f1e9;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e8dcc8;
+            --text-primary: #222222;
+            --text-secondary: #5f5b53;
+            --accent-primary: #2f7d6d;
+            --accent-secondary: #286e60;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --badge-bg: rgba(47, 125, 109, 0.08);
+            --badge-border: rgba(47, 125, 109, 0.2);
+            --badge-text: #2f7d6d;
+            --card-shadow: rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #2f7d6d 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        [data-theme="warm"] .gradient-text {
+            background: linear-gradient(135deg, #2f7d6d 0%, #1e6b5c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--card-shadow, rgba(0, 0, 0, 0.1));
+        }
+        .btn-scale:hover {
+            transform: translateY(-2px);
+        }
+        .btn-scale:active {
+            transform: translateY(0);
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: var(--bg-secondary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s;
+            border: 2px solid var(--border-color);
+        }
+        .theme-toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        [data-theme="warm"] .theme-toggle-slider {
+            transform: translateX(30px);
+        }
+        .nav-link {
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            border-radius: 8px;
+            padding: 8px 16px;
+        }
+        .nav-link:hover {
+            color: var(--accent-primary);
+            background: var(--badge-bg);
+        }
+        input:focus, textarea:focus, button:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--badge-bg);
+        }
+        [data-theme="warm"] input::placeholder,
+        [data-theme="warm"] textarea::placeholder {
+            color: #9e9689;
+        }
+        
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 12px;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border-radius: 8px;
+            font-size: 11px;
+            white-space: nowrap;
+            z-index: 100;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .tooltip:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body class="min-h-screen" style="background-color: var(--bg-primary); color: var(--text-primary);">
+    <!-- Top Navigation -->
+    <nav class="border-b sticky top-0 z-50" style="border-color: var(--border-color); background: var(--glass-bg); backdrop-filter: blur(10px); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="Clean My Prompt.svg" alt="Clean My Prompt Logo" class="w-8 h-8" />
+                <div>
+                    <div class="font-bold text-sm" style="color: var(--text-primary);">Clean My Prompt</div>
+                    <div class="text-xs" style="color: var(--text-secondary);">v1.2.0</div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <!-- Theme Toggle -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xs" style="color: var(--text-secondary);">🌙</span>
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                        <div class="theme-toggle-slider"></div>
+                    </button>
+                    <span class="text-xs" style="color: var(--text-secondary);">☀️</span>
+                </div>
+
+                <!-- GitHub Link -->
+                <a 
+                    href="https://github.com/Eulex0x/cleanmyprompt" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="nav-link flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg hover:bg-opacity-10 transition-all"
+                    style="background-color: var(--bg-secondary);"
+                >
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        
+        <!-- Trust Badge -->
+        <div class="flex justify-center mb-6 animate-slide-up">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium" style="background-color: var(--badge-bg); border: 1px solid var(--badge-border); color: var(--badge-text);">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" />
+                </svg>
+                <span>100% Offline & Private</span>
+            </div>
+        </div>
+
+        <!-- Trust Message -->
+        <div class="text-center mb-8 animate-slide-up" style="animation-delay: 0.05s;">
+            <p class="text-sm max-w-4xl mx-auto leading-relaxed" style="color: var(--text-secondary);">
+                <span class="font-semibold" style="color: var(--accent-primary);">100% Client-Side Processing.</span> 
+                All sanitization happens locally in your browser's memory. Zero network requests. Zero data leaves your device.
+            </p>
+        </div>
+
+        <!-- Header -->
+        <header class="text-center mb-12 animate-slide-up" style="animation-delay: 0.1s;">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
+                <span class="gradient-text">Clean My Prompt</span>
+            </h1>
+            <p class="text-lg sm:text-xl max-w-2xl mx-auto mb-4" style="color: var(--text-secondary);">
+                Sanitize sensitive data from your AI prompts instantly. All processing happens in your browser.
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-4 text-xs" style="color: var(--text-secondary);">
+                <div class="flex items-center gap-1">
+                    <svg class="w-4 h-4" style="color: var(--badge-text);" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    <span>No server-side processing</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <svg class="w-4 h-4" style="color: var(--badge-text);" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Open source</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <svg class="w-4 h-4" style="color: var(--badge-text);" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Free forever</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Tool -->
+        <main class="mb-16 animate-slide-up" style="animation-delay: 0.2s;">
+            <div class="glass-effect rounded-2xl p-6 sm:p-8 shadow-2xl">
+                <label for="promptInput" class="block text-sm font-semibold mb-3" style="color: var(--text-primary);">
+                    Paste Your Prompt Below
+                </label>
+                <div class="mb-2 flex items-center gap-2">
+                    <span class="text-xs" style="color: var(--text-secondary);">
+                        <svg class="w-3 h-3 inline" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                        </svg>
+                        Regex: emails, URLs, IPs, phones (🇺🇸🇩🇪🇪🇺), IBANs, API keys, credentials (user/pass) • NLP: names, places, companies
+                    </span>
+                </div>
+                <textarea 
+                    id="promptInput"
+                    aria-label="Input prompt text for sanitization"
+                    placeholder="Paste text containing emails, IPs, API keys, or credit card numbers..."
+                    class="w-full h-64 sm:h-80 rounded-xl px-4 py-3 border focus:ring-2 focus:outline-none resize-none font-mono text-sm transition-all"
+                    style="background-color: var(--bg-secondary); color: var(--text-primary); border-color: var(--border-color);"
+                ></textarea>
+
+                <!-- Stats Display -->
+                <div id="statsDisplay" class="mt-4 text-xs flex flex-wrap gap-4" style="color: var(--text-secondary);">
+                    <span>Detected: <strong id="detectedCount" style="color: var(--text-primary);">0</strong> sensitive items</span>
+                </div>
+
+                <!-- Output Textarea (Shown automatically) -->
+                <div id="outputSection" class="mt-6 hidden">
+                    <label for="promptOutput" class="block text-sm font-semibold mb-3 flex items-center gap-2" style="color: var(--badge-text);">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        Sanitized Output (Live)
+                    </label>
+                    <textarea 
+                        id="promptOutput"
+                        aria-label="Sanitized prompt output"
+                        readonly
+                        class="w-full h-64 sm:h-80 rounded-xl px-4 py-3 border resize-none font-mono text-sm"
+                        style="background-color: var(--bg-secondary); color: var(--badge-text); border-color: var(--badge-border);"
+                    ></textarea>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 mt-4">
+                        <button 
+                            id="copyBtn"
+                            aria-label="Copy sanitized text to clipboard"
+                            class="flex-1 text-white font-semibold py-4 px-6 rounded-xl transition-all btn-scale shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2"
+                            style="background-color: var(--accent-primary); background-image: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);"
+                        >
+                            <span id="copyBtnText" class="flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                                Copy to Clipboard
+                            </span>
+                        </button>
+
+                        <button 
+                            id="resetBtn"
+                            aria-label="Reset and clear all text"
+                            class="sm:flex-none font-semibold py-4 px-6 rounded-xl transition-all btn-scale focus:outline-none focus:ring-2 focus:ring-offset-2"
+                            style="background-color: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color);"
+                        >
+                            Reset
+                        </button>
+                    </div>
+
+                    <!-- Feature Toggle Buttons -->
+                    <div class="flex flex-wrap gap-2 mt-4 pt-4" style="border-top: 1px solid var(--border-color);">
+                        <button 
+                            id="tryDemoBtn" 
+                            class="tooltip inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all btn-scale" 
+                            style="background-color: var(--accent-primary); color: white; border: 1px solid var(--accent-secondary);"
+                            data-tooltip="Load sample data to test the sanitization in action. See how emails, API keys, names get replaced!"
+                        >
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" />
+                                <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
+                            </svg>
+                            <span>Try Demo</span>
+                        </button>
+                        
+                        <button 
+                            id="smartDetectionToggle" 
+                            class="tooltip inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all btn-scale" 
+                            style="background-color: var(--badge-bg); border: 1px solid var(--badge-border); color: var(--badge-text);"
+                            data-tooltip="Uses AI to detect names, locations & companies. Ex: 'John Smith' → 'Alex Johnson'"
+                        >
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                            <span>Smart NLP: ON</span>
+                        </button>
+                        
+                        <button 
+                            id="realisticModeToggle" 
+                            class="tooltip inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all btn-scale" 
+                            style="background-color: var(--badge-bg); border: 1px solid var(--badge-border); color: var(--badge-text);"
+                            data-tooltip="Replaces with realistic data. Ex: email@test.com → user@company.com"
+                        >
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Realistic: ON</span>
+                        </button>
+                        
+                        <button 
+                            id="customRegexBtn" 
+                            class="tooltip inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all btn-scale" 
+                            style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-secondary);"
+                            data-tooltip="Add your own regex patterns. Ex: SSN, passport numbers, etc."
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            <span>Custom Patterns</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- How It Works -->
+        <section class="mb-16 animate-slide-up" style="animation-delay: 0.3s;">
+            <h2 class="text-3xl font-bold text-center mb-10 gradient-text">How It Works</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background-color: var(--badge-bg);">
+                        <svg class="w-8 h-8" style="color: var(--accent-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--text-primary);">Paste Raw Info</h3>
+                    <p class="text-sm" style="color: var(--text-secondary);">Copy any text containing sensitive data like emails, IPs, or API keys.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background-color: var(--badge-bg);">
+                        <svg class="w-8 h-8" style="color: var(--accent-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--text-primary);">Real-Time Scrub</h3>
+                    <p class="text-sm" style="color: var(--text-secondary);">Our regex engine replaces sensitive data with safe placeholders as you type.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background-color: var(--badge-bg);">
+                        <svg class="w-8 h-8" style="color: var(--accent-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--text-primary);">Safe for AI</h3>
+                    <p class="text-sm" style="color: var(--text-secondary);">Share your sanitized prompt with AI tools without exposing real credentials.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-sm pt-8 animate-slide-up" style="color: var(--text-secondary); border-top: 1px solid var(--border-color); animation-delay: 0.4s;">
+            
+            <!-- Technical Transparency -->
+            <details class="text-center mb-6 max-w-3xl mx-auto">
+                <summary class="cursor-pointer text-xs font-medium inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:bg-opacity-50" style="color: var(--text-secondary); background-color: var(--bg-secondary); border: 1px solid var(--border-color);">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    How does client-side processing work?
+                </summary>
+                <div class="mt-4 p-4 rounded-xl text-left text-xs space-y-2" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-secondary);">
+                    <p><strong style="color: var(--text-primary);">1. Memory Allocation:</strong> When you paste text, it's stored temporarily in your browser's JavaScript heap memory (RAM).</p>
+                    <p><strong style="color: var(--text-primary);">2. In-Memory Processing:</strong> Our regex patterns and NLP library (Compromise.js) scan the text within your RAM using pattern matching algorithms.</p>
+                    <p><strong style="color: var(--text-primary);">3. Zero I/O Operations:</strong> No file system writes, no localStorage persistence, no network transmission. Everything stays in volatile memory.</p>
+                    <p><strong style="color: var(--text-primary);">4. Automatic Cleanup:</strong> Once you close the tab or refresh, JavaScript's garbage collector immediately frees the memory. No trace remains.</p>
+                    <p class="pt-2 font-medium" style="color: var(--accent-primary);">
+                        <svg class="w-4 h-4 inline" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        You can verify: Open DevTools Network tab - you'll see zero requests after the page loads.
+                    </p>
+                </div>
+            </details>
+            
+            <p class="mb-4">
+                Built with privacy in mind. No data ever leaves your browser.
+            </p>
+            <div class="flex items-center justify-center gap-6 mb-4 flex-wrap">
+                <a href="how-it-works.html" class="nav-link text-xs">Technical Details</a>
+                <a href="cookie-policy.html" class="nav-link text-xs">Cookie Policy</a>
+                <button id="manageCookiesBtn" class="nav-link text-xs">Cookie Settings</button>
+                <a href="https://github.com/yourusername/cleanmyprompt" class="nav-link text-xs" target="_blank" rel="noopener">GitHub</a>
+            </div>
+            <p class="text-xs mb-2">
+                Made by developers, for developers • Open Source (MIT) • 
+                <span style="color: var(--accent-primary);" class="font-medium">100% Client-Side Processing</span>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookieConsent" class="fixed bottom-0 left-0 right-0 z-50 p-4 hidden" style="background: var(--glass-bg); backdrop-filter: blur(16px); border-top: 1px solid var(--border-color); box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-start gap-3">
+                <span class="text-2xl">🍪</span>
+                <div>
+                    <p class="text-sm font-medium mb-1" style="color: var(--text-primary);">We value your privacy</p>
+                    <p class="text-xs" style="color: var(--text-secondary);">
+                        We use minimal cookies to remember your theme preference and collect anonymous analytics (country-level only) to improve our service. No personal data is stored.
+                    </p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button id="rejectCookies" class="px-4 py-2 text-xs font-medium rounded-lg transition-all" style="background-color: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color);">
+                    Decline
+                </button>
+                <button id="acceptCookies" class="px-4 py-2 text-xs font-medium text-white rounded-lg transition-all" style="background-color: var(--accent-primary);">
+                    Accept
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Regex Modal -->
+    <div id="customRegexModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" style="background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);">
+        <div class="w-full max-w-lg rounded-2xl p-6 shadow-2xl" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color);">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold" style="color: var(--text-primary);">Add Custom Pattern</h3>
+                <button id="closeModalBtn" class="text-2xl" style="color: var(--text-secondary);">&times;</button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Pattern Name</label>
+                    <input id="patternName" type="text" placeholder="e.g., SSN, Passport, VAT Number" class="w-full px-4 py-2 rounded-lg text-sm" style="background-color: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color);">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Regular Expression</label>
+                    <input id="patternRegex" type="text" placeholder="e.g., \d{3}-\d{2}-\d{4}" class="w-full px-4 py-2 rounded-lg text-sm font-mono" style="background-color: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color);">
+                    <p class="text-xs mt-1" style="color: var(--text-secondary);">Enter JavaScript regex (without slashes). Examples: \d{3}-\d{2}-\d{4}, [A-Z]{2}\d{6}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Replacement Placeholder</label>
+                    <input id="patternPlaceholder" type="text" placeholder="e.g., SSN" class="w-full px-4 py-2 rounded-lg text-sm" style="background-color: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color);">
+                </div>
+                
+                <div class="flex gap-3 pt-2">
+                    <button id="savePatternBtn" class="flex-1 py-3 text-sm font-semibold text-white rounded-xl transition-all btn-scale" style="background-color: var(--accent-primary);">
+                        Save Pattern
+                    </button>
+                    <button id="cancelPatternBtn" class="px-6 py-3 text-sm font-semibold rounded-xl transition-all btn-scale" style="background-color: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color);">
+                        Cancel
+                    </button>
+                </div>
+                
+                <!-- Saved Patterns List -->
+                <div id="savedPatternsList" class="mt-4 pt-4" style="border-top: 1px solid var(--border-color);"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // BENCHMARK TEXT FOR TESTING
+        // ============================================
+        const BENCHMARK_TEXT = `Dear Team,
+
+I hope this email finds you well. I'm John Smith, Senior Software Engineer at Microsoft Corporation, and I'm reaching out regarding our upcoming project collaboration.
+
+Contact Information:
+- Email: john.smith@microsoft.com
+- Personal: jsmith1985@gmail.com
+- Phone: (555) 123-4567
+- Mobile Germany: +49 176 12345678
+- Mobile short: 0176265124
+- Office US: +1-206-555-9876
+- Office Berlin: 030 12345678
+
+Our team is based in Seattle, Washington, and we're working with several partners across Europe:
+- Sarah Johnson from Google in Mountain View, California
+- Dr. Michael Chen from Amazon Web Services in Portland, Oregon
+- Emily Rodriguez at Apple Inc. in Cupertino
+- Max Müller from SAP in Walldorf, Germany
+- Sophie Martin from Airbus in Toulouse, France
+
+Project Details:
+API Keys for development:
+- GitHub: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+- Stripe: sk_test_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+- AWS: AKIA1234567890EXAMPLE
+- Backup: api_key_prod_xxxxxxxxxxxxxxxxxxxx
+
+Database Credentials:
+- Server: db.internal.company.com (IP: 192.168.1.100)
+- Username: admin_user
+- Password: MyS3cur3P@ssw0rd!
+- Backup IPv4: 10.0.0.50
+- Production: 172.16.0.25
+- IPv6: 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+
+Web Resources:
+- Dashboard: https://dashboard.company.com/admin
+- Login: john.admin
+- Pass: TempPassword2024!
+- API Endpoint: https://api.example.com/v2/users
+- Documentation: www.docs.company-site.io
+
+Payment Information (for vendor setup):
+Credit Card: 4532-1234-5678-9010
+IBAN Germany: DE89 3704 0044 0532 0130 00
+IBAN France: FR14 2004 1010 0505 0001 3M02 606
+
+Additional team members:
+- Robert Williams (robert.w@techstart.io) from TechStart Inc. in London, UK
+- Jennifer Davis working at IBM in Stuttgart, Germany  
+- David Martinez from Oracle Corporation in Munich, Bavaria
+
+Postal Codes:
+- Berlin Office: 10115
+- London Office: SW1A 1AA
+- California Office: 94105
+
+Please let me know if you need any additional information. You can reach me at my secondary email: john.personal@outlook.com or call my mobile: +49 151 12345678.
+
+Looking forward to collaborating with you all!
+
+Best regards,
+John Smith
+Senior Software Engineer
+Microsoft Corporation
+Seattle, WA 98101`;
+
+        // ============================================
+        // CONFIGURATION & STATE
+        // ============================================
+        let smartDetectionEnabled = true;
+        let realisticModeEnabled = true;
+        
+        // Realistic replacements - International
+        const realisticEmails = ['user', 'admin', 'contact', 'info', 'support', 'team', 'hello', 'sales', 'office'];
+        const realisticDomains = ['company', 'business', 'example', 'organization', 'startup', 'tech', 'group', 'gmbh'];
+        const realisticNames = ['John Smith', 'Jane Doe', 'Alex Johnson', 'Sam Wilson', 'Chris Lee', 'Jordan Taylor', 'Max Müller', 'Anna Schmidt', 'Sophie Martin', 'Lucas Dubois'];
+        const realisticCities = ['Springfield', 'Portland', 'Madison', 'Austin', 'Denver', 'Seattle', 'Berlin', 'Munich', 'Hamburg', 'Frankfurt', 'Paris', 'London', 'Amsterdam'];
+        const realisticCompanies = ['Acme Corp', 'TechStart Inc', 'Global Solutions', 'Innovation Labs', 'Digital Ventures', 'Tech GmbH', 'Solutions AG', 'Systems Ltd'];
+        
+        // Base sanitization rules - International
+        const BASE_RULES = [
+            {
+                name: 'email',
+                pattern: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
+                placeholder: 'EMAIL',
+                realistic: () => `${realisticEmails[Math.floor(Math.random() * realisticEmails.length)]}@${realisticDomains[Math.floor(Math.random() * realisticDomains.length)]}.com`
+            },
+            {
+                name: 'url',
+                pattern: /\b(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?\b/g,
+                placeholder: 'URL',
+                realistic: () => `https://example-${Math.floor(Math.random() * 100)}.com`
+            },
+            {
+                name: 'ip',
+                pattern: /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g,
+                placeholder: 'IP_ADDR',
+                realistic: () => `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`
+            },
+            {
+                name: 'ipv6',
+                pattern: /\b(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\b|\b(?:[0-9a-fA-F]{1,4}:){1,7}:\b/g,
+                placeholder: 'IPV6',
+                realistic: () => `2001:0db8:85a3::8a2e:0370:7334`
+            },
+            {
+                name: 'creditCard',
+                pattern: /\b(?:\d{4}[\s-]?){3}\d{4}\b/g,
+                placeholder: 'CC',
+                realistic: () => `4532-XXXX-XXXX-${Math.floor(1000 + Math.random() * 9000)}`
+            },
+            {
+                name: 'apiKey',
+                // Comprehensive API key patterns:
+                // - Stripe/Standard: sk_, pk_, api_key_, key_, token_, secret_, bearer_
+                // - GitHub: ghp_, gho_, ghs_, github_
+                // - AWS: AKIA, ASIA (20 chars)
+                // - GitLab: glpat
+                pattern: /\b(?:sk|pk|api_key|key|token|secret|bearer|ghp|gho|ghs|github|glpat)[-_][a-zA-Z0-9_-]{12,}\b|\b(?:AKIA|ASIA)[A-Z0-9]{16}\b/g,
+                placeholder: 'API_KEY',
+                realistic: () => `api_key_${Math.random().toString(36).substring(2, 15)}_${Math.random().toString(36).substring(2, 10)}`
+            },
+            {
+                name: 'password',
+                // Password patterns with context keywords:
+                // - password: xxx, pass: xxx, pwd: xxx
+                // - Captures value after colon/equals
+                pattern: /\b(?:password|passwd|pass|pwd|secret)\s*[:=]\s*['"]?([^\s'"]+)['"]?/gi,
+                placeholder: 'PASSWORD',
+                realistic: () => `P@ssw0rd_${Math.floor(Math.random() * 9999)}`
+            },
+            {
+                name: 'username',
+                // Username patterns with context keywords:
+                // - username: xxx, user: xxx, login: xxx
+                // - Captures value after colon/equals
+                pattern: /\b(?:username|user|login|account)\s*[:=]\s*['"]?([^\s'"@]+)['"]?/gi,
+                placeholder: 'USERNAME',
+                realistic: () => `user_${Math.floor(Math.random() * 9999)}`
+            },
+            {
+                name: 'phone',
+                // International phone formats:
+                // US: (555) 123-4567, 555-123-4567, +1-555-123-4567
+                // German: 0176 12345678, +49 176 12345678, 030 12345678
+                // EU: +33 1 23 45 67 89, +44 20 1234 5678
+                pattern: /\b(?:\+?\d{1,3}[-.\s]?)?(?:\(?\d{2,4}\)?[-.\s]?)?\d{3,4}[-.\s]?\d{3,4}[-.\s]?\d{2,4}\b|\b0\d{9,11}\b/g,
+                placeholder: 'PHONE',
+                realistic: () => {
+                    const formats = [
+                        `+49 176 ${Math.floor(10000000 + Math.random() * 90000000)}`,
+                        `(555) ${Math.floor(100 + Math.random() * 900)}-${Math.floor(1000 + Math.random() * 9000)}`,
+                        `+44 20 ${Math.floor(1000 + Math.random() * 9000)} ${Math.floor(1000 + Math.random() * 9000)}`
+                    ];
+                    return formats[Math.floor(Math.random() * formats.length)];
+                }
+            },
+            {
+                name: 'iban',
+                pattern: /\b[A-Z]{2}\d{2}[\s]?(?:[A-Z0-9]{4}[\s]?){3,7}[A-Z0-9]{0,4}\b/g,
+                placeholder: 'IBAN',
+                realistic: () => `DE89 3704 0044 0532 0130 00`
+            },
+            {
+                name: 'postalCode',
+                // US ZIP: 12345, 12345-6789
+                // German: 10115, 80331
+                // UK: SW1A 1AA
+                pattern: /\b\d{5}(?:-\d{4})?\b|\b[A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2}\b/g,
+                placeholder: 'ZIP',
+                realistic: () => {
+                    const formats = ['10115', 'SW1A 1AA', '12345'];
+                    return formats[Math.floor(Math.random() * formats.length)];
+                }
+            }
+        ];
+        
+        // Smart NLP-based detection using Compromise
+        function getSmartPatterns(text) {
+            if (!smartDetectionEnabled || !window.nlp) return [];
+            
+            try {
+                const doc = nlp(text);
+                const patterns = [];
+                
+                // Extract person names (including titles like Dr., Mr., etc.)
+                const people = doc.people().out('array');
+                people.forEach(person => {
+                    if (person.length > 2) { // Avoid single letters
+                        patterns.push({
+                            name: 'personName',
+                            text: person,
+                            placeholder: 'NAME',
+                            realistic: () => realisticNames[Math.floor(Math.random() * realisticNames.length)]
+                        });
+                    }
+                });
+                
+                // Extract places (cities, states, countries)
+                const places = doc.places().out('array');
+                places.forEach(place => {
+                    if (place.length > 2 && !place.match(/\d/)) { // Avoid numbers
+                        patterns.push({
+                            name: 'location',
+                            text: place,
+                            placeholder: 'LOCATION',
+                            realistic: () => realisticCities[Math.floor(Math.random() * realisticCities.length)]
+                        });
+                    }
+                });
+                
+                // Extract organizations/companies
+                const orgs = doc.organizations().out('array');
+                orgs.forEach(org => {
+                    if (org.length > 2) {
+                        patterns.push({
+                            name: 'organization',
+                            text: org,
+                            placeholder: 'COMPANY',
+                            realistic: () => realisticCompanies[Math.floor(Math.random() * realisticCompanies.length)]
+                        });
+                    }
+                });
+                
+                // Additional manual pattern for common missed cases
+                // Detect state abbreviations (WA, CA, etc.)
+                const stateAbbrevs = text.match(/\b[A-Z]{2}\b\s*\d{5}/g);
+                if (stateAbbrevs) {
+                    stateAbbrevs.forEach(match => {
+                        const state = match.substring(0, 2);
+                        patterns.push({
+                            name: 'location',
+                            text: state,
+                            placeholder: 'STATE',
+                            realistic: () => 'CA'
+                        });
+                    });
+                }
+                
+                return patterns;
+            } catch (e) {
+                console.error('NLP error:', e);
+                return [];
+            }
+        }
+
+        // Load custom patterns from sessionStorage
+        function loadCustomPatterns() {
+            const stored = sessionStorage.getItem('customPatterns');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function saveCustomPatterns(patterns) {
+            sessionStorage.setItem('customPatterns', JSON.stringify(patterns));
+        }
+
+        function getAllRules() {
+            const customPatterns = loadCustomPatterns();
+            const customRules = customPatterns.map(p => ({
+                name: p.name,
+                pattern: new RegExp(p.regex, 'g'),
+                placeholder: p.placeholder,
+                realistic: () => `[${p.placeholder}_REDACTED]`,
+                isCustom: true
+            }));
+            
+            return [...BASE_RULES, ...customRules];
+        }
+
+        // DOM Elements
+        const promptInput = document.getElementById('promptInput');
+        const promptOutput = document.getElementById('promptOutput');
+        const outputSection = document.getElementById('outputSection');
+        const copyBtn = document.getElementById('copyBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const copyBtnText = document.getElementById('copyBtnText');
+        const detectedCount = document.getElementById('detectedCount');
+        const loadBenchmarkBtn = document.getElementById('loadBenchmark');
+        const tryDemoBtn = document.getElementById('tryDemoBtn');
+
+        // Try Demo button functionality
+        const loadDemo = () => {
+            promptInput.value = BENCHMARK_TEXT;
+            promptInput.dispatchEvent(new Event('input'));
+            promptInput.focus();
+            
+            // Show debug info
+            setTimeout(() => {
+                console.log('=== SANITIZATION DEBUG ===');
+                console.log('Smart Detection:', smartDetectionEnabled);
+                console.log('Realistic Mode:', realisticModeEnabled);
+                console.log('NLP Available:', !!window.nlp);
+            }, 500);
+        };
+
+        // Load benchmark text (legacy button)
+        if (loadBenchmarkBtn) {
+            loadBenchmarkBtn.addEventListener('click', loadDemo);
+        }
+
+        // Try Demo button with visual feedback
+        if (tryDemoBtn) {
+            tryDemoBtn.addEventListener('click', () => {
+                loadDemo();
+                
+                // Visual feedback
+                const originalHTML = tryDemoBtn.innerHTML;
+                tryDemoBtn.innerHTML = `
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Demo Loaded!</span>
+                `;
+                tryDemoBtn.style.backgroundColor = 'var(--badge-bg)';
+                tryDemoBtn.style.color = 'var(--badge-text)';
+                
+                setTimeout(() => {
+                    tryDemoBtn.innerHTML = originalHTML;
+                    tryDemoBtn.style.backgroundColor = 'var(--accent-primary)';
+                    tryDemoBtn.style.color = 'white';
+                }, 2000);
+            });
+        }
+
+        // Sanitization function
+        function sanitizeText(text) {
+            if (!text) return '';
+
+            let sanitized = text;
+            const counters = {};
+
+            // STEP 1: Apply NLP-based smart detection FIRST (if enabled)
+            if (smartDetectionEnabled && window.nlp) {
+                const smartPatterns = getSmartPatterns(text);
+                
+                // Sort by length (longest first) to avoid partial replacements
+                smartPatterns.sort((a, b) => b.text.length - a.text.length);
+                
+                // Create a map to track what we've replaced
+                const replaced = new Set();
+                
+                smartPatterns.forEach(pattern => {
+                    // Skip if already replaced
+                    if (replaced.has(pattern.text.toLowerCase())) return;
+                    
+                    const escapedText = pattern.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const regex = new RegExp(`\\b${escapedText}\\b`, 'gi');
+                    
+                    if (sanitized.match(regex)) {
+                        sanitized = sanitized.replace(regex, () => {
+                            if (realisticModeEnabled && pattern.realistic) {
+                                return pattern.realistic();
+                            } else {
+                                counters[pattern.name] = (counters[pattern.name] || 0) + 1;
+                                return `[${pattern.placeholder}_${counters[pattern.name]}]`;
+                            }
+                        });
+                        replaced.add(pattern.text.toLowerCase());
+                    }
+                });
+            }
+
+            // STEP 2: Apply regex rules for structured data (emails, IPs, etc.)
+            const rules = getAllRules();
+            rules.forEach(rule => {
+                counters[rule.name] = counters[rule.name] || 0;
+                
+                sanitized = sanitized.replace(rule.pattern, (match) => {
+                    counters[rule.name]++;
+                    
+                    if (realisticModeEnabled && rule.realistic) {
+                        return rule.realistic();
+                    } else {
+                        return `[${rule.placeholder}_${counters[rule.name]}]`;
+                    }
+                });
+            });
+
+            return sanitized;
+        }
+
+        // Count total detections
+        function countDetections(text) {
+            if (!text) return 0;
+            
+            let total = 0;
+            const rules = getAllRules();
+            
+            // Count regex-based detections
+            rules.forEach(rule => {
+                const matches = text.match(rule.pattern);
+                if (matches) total += matches.length;
+            });
+            
+            // Count NLP-based detections
+            if (smartDetectionEnabled && window.nlp) {
+                const smartPatterns = getSmartPatterns(text);
+                total += smartPatterns.length;
+            }
+            
+            return total;
+        }
+
+        // Real-time sanitization on input/paste
+        promptInput.addEventListener('input', () => {
+            const text = promptInput.value;
+            
+            if (text.trim()) {
+                // Sanitize in real-time
+                const sanitized = sanitizeText(text);
+                promptOutput.value = sanitized;
+                
+                // Update detection counter
+                detectedCount.textContent = countDetections(text);
+                
+                // Show output section
+                outputSection.classList.remove('hidden');
+            } else {
+                // Hide output when input is empty
+                outputSection.classList.add('hidden');
+                detectedCount.textContent = '0';
+            }
+        });
+
+        // Copy button handler
+        copyBtn.addEventListener('click', async () => {
+            const textToCopy = promptOutput.value;
+            
+            if (!textToCopy) return;
+
+            try {
+                await navigator.clipboard.writeText(textToCopy);
+                
+                // Success state
+                copyBtn.style.background = '#10b981';
+                copyBtnText.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Copied!
+                `;
+
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    copyBtn.style.background = '';
+                    copyBtn.style.backgroundImage = 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%)';
+                    copyBtnText.innerHTML = `
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Copy to Clipboard
+                    `;
+                }, 2000);
+            } catch (err) {
+                alert('Failed to copy. Please try again.');
+            }
+        });
+
+        // Theme toggle handler
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'warm') {
+            htmlElement.setAttribute('data-theme', 'warm');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'warm' ? 'dark' : 'warm';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // ============================================
+        // COOKIE CONSENT
+        // ============================================
+        const cookieConsent = document.getElementById('cookieConsent');
+        const acceptCookies = document.getElementById('acceptCookies');
+        const rejectCookies = document.getElementById('rejectCookies');
+        const manageCookiesBtn = document.getElementById('manageCookiesBtn');
+
+        function checkCookieConsent() {
+            const consent = localStorage.getItem('cookieConsent');
+            if (!consent) {
+                setTimeout(() => {
+                    cookieConsent.classList.remove('hidden');
+                }, 2000);
+            }
+        }
+
+        acceptCookies.addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'accepted');
+            cookieConsent.classList.add('hidden');
+            // Simulate analytics (country-level only - no actual tracking)
+            console.log('Analytics enabled: Country-level data only');
+        });
+
+        rejectCookies.addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'rejected');
+            cookieConsent.classList.add('hidden');
+        });
+
+        manageCookiesBtn.addEventListener('click', () => {
+            localStorage.removeItem('cookieConsent');
+            cookieConsent.classList.remove('hidden');
+        });
+
+        // ============================================
+        // FEATURE TOGGLES
+        // ============================================
+        const smartDetectionToggle = document.getElementById('smartDetectionToggle');
+        const realisticModeToggle = document.getElementById('realisticModeToggle');
+
+        smartDetectionToggle.addEventListener('click', () => {
+            smartDetectionEnabled = !smartDetectionEnabled;
+            const statusText = smartDetectionEnabled ? 'ON' : 'OFF';
+            smartDetectionToggle.querySelector('span').textContent = `Smart NLP: ${statusText}`;
+            smartDetectionToggle.style.opacity = smartDetectionEnabled ? '1' : '0.5';
+            
+            // Show debug info
+            console.log('Smart Detection toggled:', smartDetectionEnabled);
+            console.log('NLP library loaded:', !!window.nlp);
+            
+            // Re-sanitize if there's input
+            if (promptInput.value) {
+                promptInput.dispatchEvent(new Event('input'));
+            }
+        });
+
+        realisticModeToggle.addEventListener('click', () => {
+            realisticModeEnabled = !realisticModeEnabled;
+            realisticModeToggle.querySelector('span').textContent = `Realistic: ${realisticModeEnabled ? 'ON' : 'OFF'}`;
+            realisticModeToggle.style.opacity = realisticModeEnabled ? '1' : '0.5';
+            
+            // Re-sanitize if there's input
+            if (promptInput.value) {
+                promptInput.dispatchEvent(new Event('input'));
+            }
+        });
+
+        // ============================================
+        // CUSTOM REGEX MODAL
+        // ============================================
+        const customRegexBtn = document.getElementById('customRegexBtn');
+        const customRegexModal = document.getElementById('customRegexModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelPatternBtn = document.getElementById('cancelPatternBtn');
+        const savePatternBtn = document.getElementById('savePatternBtn');
+        const savedPatternsList = document.getElementById('savedPatternsList');
+
+        function renderSavedPatterns() {
+            const patterns = loadCustomPatterns();
+            if (patterns.length === 0) {
+                savedPatternsList.innerHTML = '<p class="text-xs" style="color: var(--text-secondary);">No custom patterns saved yet.</p>';
+                return;
+            }
+
+            savedPatternsList.innerHTML = '<p class="text-xs font-semibold mb-2" style="color: var(--text-primary);">Saved Patterns:</p>';
+            patterns.forEach((pattern, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-2 rounded-lg mb-2';
+                div.style.backgroundColor = 'var(--bg-primary)';
+                div.innerHTML = `
+                    <div class="flex-1">
+                        <p class="text-xs font-medium" style="color: var(--text-primary);">${pattern.name}</p>
+                        <p class="text-xs font-mono" style="color: var(--text-secondary);">${pattern.regex}</p>
+                    </div>
+                    <button class="delete-pattern text-xs px-3 py-1 rounded" data-index="${index}" style="color: #ef4444; background: rgba(239, 68, 68, 0.1);">Delete</button>
+                `;
+                savedPatternsList.appendChild(div);
+            });
+
+            // Add delete handlers
+            document.querySelectorAll('.delete-pattern').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    const patterns = loadCustomPatterns();
+                    patterns.splice(index, 1);
+                    saveCustomPatterns(patterns);
+                    renderSavedPatterns();
+                    
+                    // Re-sanitize
+                    if (promptInput.value) {
+                        promptInput.dispatchEvent(new Event('input'));
+                    }
+                });
+            });
+        }
+
+        customRegexBtn.addEventListener('click', () => {
+            customRegexModal.classList.remove('hidden');
+            renderSavedPatterns();
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            customRegexModal.classList.add('hidden');
+        });
+
+        cancelPatternBtn.addEventListener('click', () => {
+            customRegexModal.classList.add('hidden');
+        });
+
+        savePatternBtn.addEventListener('click', () => {
+            const name = document.getElementById('patternName').value.trim();
+            const regex = document.getElementById('patternRegex').value.trim();
+            const placeholder = document.getElementById('patternPlaceholder').value.trim();
+
+            if (!name || !regex || !placeholder) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            try {
+                // Test if regex is valid
+                new RegExp(regex);
+                
+                const patterns = loadCustomPatterns();
+                patterns.push({ name, regex, placeholder });
+                saveCustomPatterns(patterns);
+
+                // Clear form
+                document.getElementById('patternName').value = '';
+                document.getElementById('patternRegex').value = '';
+                document.getElementById('patternPlaceholder').value = '';
+
+                renderSavedPatterns();
+                alert('Pattern saved successfully!');
+                
+                // Re-sanitize
+                if (promptInput.value) {
+                    promptInput.dispatchEvent(new Event('input'));
+                }
+            } catch (e) {
+                alert('Invalid regular expression: ' + e.message);
+            }
+        });
+
+        // Close modal on outside click
+        customRegexModal.addEventListener('click', (e) => {
+            if (e.target === customRegexModal) {
+                customRegexModal.classList.add('hidden');
+            }
+        });
+
+        // Initialize
+        checkCookieConsent();
+        
+        // Debug NLP on load
+        window.addEventListener('load', () => {
+            console.log('=== Clean My Prompt Debug Info ===');
+            console.log('NLP Library (Compromise) loaded:', !!window.nlp);
+            if (window.nlp) {
+                console.log('NLP version:', window.nlp.version || 'unknown');
+                // Test NLP
+                const testDoc = nlp('John Smith works at Microsoft in New York');
+                console.log('Test - People:', testDoc.people().out('array'));
+                console.log('Test - Places:', testDoc.places().out('array'));
+                console.log('Test - Organizations:', testDoc.organizations().out('array'));
+                
+                // Run on benchmark
+                setTimeout(() => {
+                    if (window.BENCHMARK_TEXT) {
+                        const benchDoc = nlp(window.BENCHMARK_TEXT);
+                        console.log('=== BENCHMARK ANALYSIS ===');
+                        console.log('People detected:', benchDoc.people().out('array'));
+                        console.log('Places detected:', benchDoc.places().out('array'));
+                        console.log('Organizations detected:', benchDoc.organizations().out('array'));
+                    }
+                }, 1000);
+            } else {
+                console.error('⚠️ NLP library failed to load. Smart detection disabled.');
+            }
+        });
+
+        // Reset button handler
+        resetBtn.addEventListener('click', () => {
+            promptInput.value = '';
+            promptOutput.value = '';
+            outputSection.classList.add('hidden');
+            copyBtn.classList.add('hidden');
+            resetBtn.classList.add('hidden');
+            detectedCount.textContent = '0';
+            promptInput.focus();
+        });
+
+        // ===== OFFLINE DETECTION =====
+        let offlineNotificationShown = false;
+        
+        function showOfflineNotification() {
+            if (offlineNotificationShown) return;
+            offlineNotificationShown = true;
+            
+            const notification = document.createElement('div');
+            notification.id = 'offlineNotification';
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    z-index: 10000;
+                    background: var(--glass-bg);
+                    backdrop-filter: blur(20px);
+                    border: 2px solid var(--accent-primary);
+                    border-radius: 24px;
+                    padding: 40px 50px;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+                    max-width: 90%;
+                    text-align: center;
+                    animation: slideInScale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+                ">
+                    <svg style="width: 64px; height: 64px; margin: 0 auto 20px; color: var(--accent-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    <h3 style="font-size: 28px; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">
+                        🎉 You're Offline!
+                    </h3>
+                    <p style="font-size: 16px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6;">
+                        Perfect! Now you can sanitize your sensitive data with <strong style="color: var(--accent-primary);">complete confidence</strong>.<br>
+                        Zero network access = <strong style="color: var(--badge-text);">Maximum Privacy</strong>.
+                    </p>
+                    <button onclick="this.parentElement.parentElement.remove(); offlineNotificationShown = false;" style="
+                        background: var(--accent-primary);
+                        color: white;
+                        border: none;
+                        padding: 12px 32px;
+                        border-radius: 12px;
+                        font-weight: 600;
+                        font-size: 15px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        Let's Sanitize! 🚀
+                    </button>
+                </div>
+                <div style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0, 0, 0, 0.7);
+                    backdrop-filter: blur(4px);
+                    z-index: 9999;
+                " onclick="this.parentElement.remove(); offlineNotificationShown = false;"></div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-dismiss after 10 seconds
+            setTimeout(() => {
+                if (document.getElementById('offlineNotification')) {
+                    document.getElementById('offlineNotification').remove();
+                    offlineNotificationShown = false;
+                }
+            }, 10000);
+        }
+
+        // Listen for offline/online events
+        window.addEventListener('offline', () => {
+            console.log('📴 Network: OFFLINE');
+            setTimeout(showOfflineNotification, 500);
+        });
+
+        window.addEventListener('online', () => {
+            console.log('📶 Network: ONLINE');
+            const notification = document.getElementById('offlineNotification');
+            if (notification) {
+                notification.remove();
+                offlineNotificationShown = false;
+            }
+        });
+
+        // Check if already offline on load
+        if (!navigator.onLine) {
+            setTimeout(showOfflineNotification, 2000);
+        }
+    </script>
+    <style>
+        @keyframes slideInScale {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+    </style>
+</body>
+</html>
