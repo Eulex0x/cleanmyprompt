@@ -675,16 +675,19 @@ Seattle, WA 98101`;
         const realisticCompanies = ['Acme Corp', 'TechStart Inc', 'Global Solutions', 'Innovation Labs', 'Digital Ventures', 'Tech GmbH', 'Solutions AG', 'Systems Ltd'];
         
         // Base sanitization rules - International
+        // IMPORTANT: Order matters! Process emails BEFORE URLs to prevent domain detection in emails
         const BASE_RULES = [
             {
                 name: 'email',
+                // Enhanced email pattern - processes FIRST to prevent domain interference
                 pattern: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
                 placeholder: 'EMAIL',
                 realistic: () => `${realisticEmails[Math.floor(Math.random() * realisticEmails.length)]}@${realisticDomains[Math.floor(Math.random() * realisticDomains.length)]}.com`
             },
             {
                 name: 'url',
-                pattern: /\b(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?\b/g,
+                // URL pattern - matches domains/URLs but comes AFTER email to avoid conflicts
+                pattern: /\b(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?\b(?![\w.-]*@)/g,
                 placeholder: 'URL',
                 realistic: () => `https://example-${Math.floor(Math.random() * 100)}.com`
             },
@@ -780,13 +783,30 @@ Seattle, WA 98101`;
                 const doc = nlp(text);
                 const patterns = [];
                 
+                // Common non-name words to filter out (multilingual)
+                const stopWords = ['ist', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 
+                                   'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 
+                                   'to', 'from', 'nicht', 'ein', 'eine', 'der', 'die', 'das'];
+                
+                // Helper function to clean NLP matches (remove trailing stop words)
+                function cleanMatch(text) {
+                    let cleaned = text.trim();
+                    // Remove trailing stop words
+                    const words = cleaned.split(/\s+/);
+                    while (words.length > 0 && stopWords.includes(words[words.length - 1].toLowerCase())) {
+                        words.pop();
+                    }
+                    return words.join(' ');
+                }
+                
                 // Extract person names (including titles like Dr., Mr., etc.)
                 const people = doc.people().out('array');
                 people.forEach(person => {
-                    if (person.length > 2) { // Avoid single letters
+                    const cleaned = cleanMatch(person);
+                    if (cleaned.length > 2) { // Avoid single letters
                         patterns.push({
                             name: 'personName',
-                            text: person,
+                            text: cleaned,
                             placeholder: 'NAME',
                             realistic: () => realisticNames[Math.floor(Math.random() * realisticNames.length)]
                         });
@@ -796,10 +816,11 @@ Seattle, WA 98101`;
                 // Extract places (cities, states, countries)
                 const places = doc.places().out('array');
                 places.forEach(place => {
-                    if (place.length > 2 && !place.match(/\d/)) { // Avoid numbers
+                    const cleaned = cleanMatch(place);
+                    if (cleaned.length > 2 && !cleaned.match(/\d/)) { // Avoid numbers
                         patterns.push({
                             name: 'location',
-                            text: place,
+                            text: cleaned,
                             placeholder: 'LOCATION',
                             realistic: () => realisticCities[Math.floor(Math.random() * realisticCities.length)]
                         });
@@ -809,10 +830,11 @@ Seattle, WA 98101`;
                 // Extract organizations/companies
                 const orgs = doc.organizations().out('array');
                 orgs.forEach(org => {
-                    if (org.length > 2) {
+                    const cleaned = cleanMatch(org);
+                    if (cleaned.length > 2) {
                         patterns.push({
                             name: 'organization',
-                            text: org,
+                            text: cleaned,
                             placeholder: 'COMPANY',
                             realistic: () => realisticCompanies[Math.floor(Math.random() * realisticCompanies.length)]
                         });
