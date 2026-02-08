@@ -76,6 +76,64 @@
     <!-- Compromise NLP - Lightweight client-side NLP -->
     <script src="https://unpkg.com/compromise"></script>
     <style>
+        /* ============================================
+           LOADING SCREEN (Critical CSS - Inline)
+           ============================================ */
+        #pageLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        #pageLoader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(47, 125, 109, 0.1);
+            border-top-color: #2f7d6d;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loader-text {
+            margin-top: 24px;
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 14px;
+            color: #a1a1aa;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.95); }
+        }
+        
         /* Reset */
         *, *::before, *::after { box-sizing: border-box; }
         
@@ -235,6 +293,19 @@
     </style>
 </head>
 <body class="min-h-screen" style="background-color: var(--bg-primary); color: var(--text-primary);">
+    <!-- ============================================
+         LOADING SCREEN
+         ============================================ -->
+    <div id="pageLoader">
+        <svg class="loader-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#2f7d6d" stroke-width="3" opacity="0.3"/>
+            <path d="M50 20 L50 50 L65 65" stroke="#2f7d6d" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <circle cx="50" cy="50" r="6" fill="#2f7d6d"/>
+        </svg>
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Loading Clean My Prompt...</div>
+    </div>
+    
     <!-- Top Navigation -->
     <nav class="border-b sticky top-0 z-50" style="border-color: var(--border-color); background: var(--glass-bg); backdrop-filter: blur(10px); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
@@ -1397,6 +1468,24 @@ Seattle, WA 98101`;
         if (!navigator.onLine) {
             setTimeout(showOfflineNotification, 2000);
         }
+        
+        // ============================================
+        // PAGE LOADER - Hide when everything is ready
+        // ============================================
+        window.addEventListener('load', function() {
+            // Wait for all resources (CSS, fonts, images, scripts)
+            const loader = document.getElementById('pageLoader');
+            if (loader) {
+                // Add small delay to ensure smooth transition
+                setTimeout(() => {
+                    loader.classList.add('loaded');
+                    // Remove from DOM after fade out
+                    setTimeout(() => {
+                        loader.remove();
+                    }, 500);
+                }, 300);
+            }
+        });
     </script>
     <style>
         @keyframes slideInScale {
