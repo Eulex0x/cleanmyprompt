@@ -69,12 +69,33 @@
       gtag('config', 'G-JYFMBRZN2P');
     </script>
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Optimized font loading with display=swap for better performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Compromise NLP - Lightweight client-side NLP -->
-    <script src="https://unpkg.com/compromise"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="Clean My Prompt.svg" as="image" type="image/svg+xml">
+    
+    <!-- Defer Tailwind to improve FCP - loads after critical CSS -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    
+    <!-- Defer Compromise.js - loads after page interactive, only when needed -->
+    <script>
+        // Lazy load Compromise.js only when user starts typing
+        let nlpLoaded = false;
+        function loadNLP() {
+            if (!nlpLoaded) {
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/compromise';
+                script.defer = true;
+                document.head.appendChild(script);
+                nlpLoaded = true;
+            }
+        }
+    </script>
+    
     <style>
         /* ============================================
            LOADING SCREEN (Critical CSS - Inline)
@@ -137,9 +158,27 @@
         /* Reset */
         *, *::before, *::after { box-sizing: border-box; }
         
-        body {
+        /* Prevent layout shift - set min-height on body */
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
             font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
         }
+        
+        /* Critical CSS - inline essential styles for immediate render */
+        body {
+            background-color: #18181b;
+            color: #fafafa;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Prevent CLS - reserve space for main content */
+        .main-container {
+            min-height: calc(100vh - 200px);
+        }
+        
         :root {
             --bg-primary: #18181b;
             --bg-secondary: #27272a;
@@ -1093,6 +1132,9 @@ Seattle, WA 98101`;
 
         // Real-time sanitization on input/paste
         promptInput.addEventListener('input', () => {
+            // Lazy load NLP on first user interaction
+            loadNLP();
+            
             const text = promptInput.value;
             
             if (text.trim()) {
