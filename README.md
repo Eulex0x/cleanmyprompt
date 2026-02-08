@@ -92,7 +92,7 @@ Visit **[CleanMyPrompt.com](https://cleanmyprompt.com)** - works immediately in 
 ### Option 2: Run Locally
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/cleanmyprompt.git
+git clone https://github.com/Eulex0x/cleanmyprompt.git
 cd cleanmyprompt
 
 # Open in browser
@@ -144,7 +144,7 @@ Upload all files to any static hosting:
 - 🇪🇺 **European Union:** IBAN validation, EU phone formats, GDPR compliance
 - 🇬🇧 **United Kingdom:** UK phones, postal codes
 
-Missing your region? [Open an issue](https://github.com/yourusername/cleanmyprompt/issues) or submit a PR!
+Missing your region? [Open an issue](https://github.com/Eulex0x/cleanmyprompt/issues) or submit a PR!
 
 ---
 
@@ -205,8 +205,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 📞 Support
 
-- 🐛 **Bug Reports:** [GitHub Issues](https://github.com/yourusername/cleanmyprompt/issues)
-- 💡 **Feature Requests:** [GitHub Discussions](https://github.com/yourusername/cleanmyprompt/discussions)
+- 🐛 **Bug Reports:** [GitHub Issues](https://github.com/Eulex0x/cleanmyprompt/issues)
+- 💡 **Feature Requests:** [GitHub Discussions](https://github.com/Eulex0x/cleanmyprompt/discussions)
 - 📖 **Documentation:** [Technical Deep Dive](https://cleanmyprompt.com/how-it-works.html)
 
 ---
