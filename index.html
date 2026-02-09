@@ -69,11 +69,11 @@
       gtag('config', 'G-JYFMBRZN2P');
     </script>
     
-    <!-- Optimized font loading with display=swap for better performance -->
+    <!-- Optimized font loading - font-display: optional prevents CLS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=optional" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=optional" rel="stylesheet"></noscript>
     
     <!-- Preload critical resources -->
     <link rel="preload" href="Clean My Prompt.svg" as="image" type="image/svg+xml">
@@ -98,8 +98,10 @@
     
     <style>
         /* ============================================
-           LOADING SCREEN (Critical CSS - Inline)
+           CRITICAL INLINE CSS - Zero CLS
            ============================================ */
+        
+        /* Prevent any layout shift from loader */
         #pageLoader {
             position: fixed;
             top: 0;
@@ -112,19 +114,12 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            pointer-events: none; /* Allows interaction with content behind */
+            transition: opacity 0.3s ease;
         }
         
         #pageLoader.loaded {
             opacity: 0;
-            visibility: hidden;
-        }
-        
-        .loader-logo {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 24px;
-            animation: pulse 2s ease-in-out infinite;
         }
         
         .loader-spinner {
@@ -148,11 +143,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(0.95); }
         }
         
         /* Reset */
@@ -336,20 +326,16 @@
          LOADING SCREEN
          ============================================ -->
     <div id="pageLoader">
-        <svg class="loader-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#2f7d6d" stroke-width="3" opacity="0.3"/>
-            <path d="M50 20 L50 50 L65 65" stroke="#2f7d6d" stroke-width="4" stroke-linecap="round" fill="none"/>
-            <circle cx="50" cy="50" r="6" fill="#2f7d6d"/>
-        </svg>
         <div class="loader-spinner"></div>
-        <div class="loader-text">Loading Clean My Prompt...</div>
+        <div class="loader-text">Loading...</div>
     </div>
     
     <!-- Top Navigation -->
     <nav class="border-b sticky top-0 z-50" style="border-color: var(--border-color); background: var(--glass-bg); backdrop-filter: blur(10px); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <img src="Clean My Prompt.svg" alt="Clean My Prompt Logo" class="w-8 h-8" />
+                <!-- Add explicit dimensions to prevent CLS -->
+                <img src="Clean My Prompt.svg" alt="Clean My Prompt Logo" width="32" height="32" class="w-8 h-8" />
                 <div>
                     <div class="font-bold text-sm" style="color: var(--text-primary);">Clean My Prompt</div>
                     <div class="text-xs" style="color: var(--text-secondary);">v1.2.0</div>
@@ -1514,20 +1500,16 @@ Seattle, WA 98101`;
         }
         
         // ============================================
-        // PAGE LOADER - Hide when everything is ready
+        // PAGE LOADER - Hide when everything is ready (prevents CLS)
         // ============================================
         window.addEventListener('load', function() {
-            // Wait for all resources (CSS, fonts, images, scripts)
             const loader = document.getElementById('pageLoader');
             if (loader) {
-                // Add small delay to ensure smooth transition
+                // Faster transition to reduce CLS
                 setTimeout(() => {
                     loader.classList.add('loaded');
-                    // Remove from DOM after fade out
-                    setTimeout(() => {
-                        loader.remove();
-                    }, 500);
-                }, 300);
+                    // Keep in DOM but invisible to prevent layout shift
+                }, 100);
             }
         });
     </script>
