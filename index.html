@@ -796,8 +796,10 @@ Seattle, WA 98101`;
             },
             {
                 name: 'url',
-                // URL pattern - matches domains/URLs but comes AFTER email to avoid conflicts
-                pattern: /\b(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?\b(?![\w.-]*@)/g,
+                // URL pattern - FIXED: negative lookbehind prevents matching domains in emails
+                // (?<![@\w]) = don't match if preceded by @ or word character
+                // (?![@]) = don't match if followed by @
+                pattern: /(?<![@\w])(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?\b(?![@])/g,
                 placeholder: 'URL',
                 realistic: () => `https://example-${Math.floor(Math.random() * 100)}.com`
             },
