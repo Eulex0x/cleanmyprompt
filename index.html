@@ -8,14 +8,19 @@
     <title>Clean My Prompt - Privacy-First AI Prompt Sanitizer | Remove Sensitive Data</title>
     <meta name="title" content="Clean My Prompt - Privacy-First AI Prompt Sanitizer | Remove Sensitive Data">
     <meta name="description" content="Instantly remove emails, API keys, passwords, IPs, credit cards, and personal info from AI prompts. 100% offline client-side processing. No data leaves your browser. Free privacy tool for ChatGPT, Claude, and all AI assistants.">
-    <meta name="keywords" content="prompt sanitizer, AI privacy, data sanitization, offline tool, prompt cleaner, ChatGPT privacy, Claude security, remove PII, GDPR compliant, client-side encryption, password remover, API key detector, NLP sanitizer">
+    <meta name="keywords" content="pii scrubbing, prompt injection defense, token compression, gdpr ai compliance, offline ocr, client-side text cleaner, prompt sanitizer, AI privacy, data sanitization, offline tool, prompt cleaner, ChatGPT privacy, Claude security, remove PII, password remover, API key detector, NLP sanitizer, privacy firewall, sensitive data removal">
     <meta name="author" content="Clean My Prompt">
+    <meta name="creator" content="Clean My Prompt">
+    <meta name="publisher" content="Clean My Prompt">
+    <meta name="generator" content="Clean My Prompt">
     <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1">
     <link rel="canonical" href="https://cleanmyprompt.com/">
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="alternate icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="favicon.svg">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -23,38 +28,137 @@
     <meta property="og:title" content="Clean My Prompt - Privacy-First AI Prompt Sanitizer">
     <meta property="og:description" content="Remove sensitive data from AI prompts instantly. 100% offline & private. Supports emails, API keys, passwords, IPs, credit cards, and more.">
     <meta property="og:site_name" content="Clean My Prompt">
+    <meta property="og:image" content="https://cleanmyprompt.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Clean My Prompt - AI Privacy Tool Dashboard">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://cleanmyprompt.com/">
     <meta property="twitter:title" content="Clean My Prompt - Privacy-First AI Prompt Sanitizer">
     <meta property="twitter:description" content="Remove sensitive data from AI prompts instantly. 100% offline & private.">
+    <meta property="twitter:image" content="https://cleanmyprompt.com/og-image.png">
+    <meta name="twitter:creator" content="@cleanmyprompt">
     
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Clean My Prompt",
-      "description": "Privacy-first AI prompt sanitizer that removes sensitive data like emails, API keys, passwords, and personal information using client-side processing",
-      "url": "https://cleanmyprompt.com/",
-      "applicationCategory": "SecurityApplication",
-      "operatingSystem": "Any (Web-based)",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "featureList": [
-        "Client-side processing",
-        "Email detection and removal",
-        "API key sanitization",
-        "Password detection",
-        "IP address removal",
-        "Credit card masking",
-        "NLP-based name detection",
-        "Multi-language support",
-        "Zero data transmission"
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "Clean My Prompt",
+          "description": "Privacy-first AI prompt sanitizer that removes sensitive data like emails, API keys, passwords, and personal information using client-side processing",
+          "url": "https://cleanmyprompt.com/",
+          "applicationCategory": "SecurityApplication",
+          "operatingSystem": "Browser",
+          "browserRequirements": "Requires JavaScript",
+          "permissions": "offline-capable",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": [
+            "100% Offline Processing",
+            "Client-side processing",
+            "Email detection and removal",
+            "API key sanitization",
+            "Password detection",
+            "IP address removal",
+            "Credit card masking",
+            "Phone number detection",
+            "SSN detection",
+            "Cryptocurrency address detection",
+            "NLP-based name detection",
+            "Multi-language support",
+            "Zero data transmission",
+            "GDPR compliant",
+            "Real-time sanitization",
+            "Privacy firewall",
+            "Token optimization",
+            "Blind PII redaction"
+          ]
+        },
+        {
+          "@type": "Organization",
+          "name": "Clean My Prompt",
+          "url": "https://cleanmyprompt.com/",
+          "logo": "https://cleanmyprompt.com/Clean My Prompt.svg",
+          "sameAs": [
+            "https://github.com/Eulex0x/cleanmyprompt"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is Clean My Prompt GDPR compliant?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Because Clean My Prompt processes all data locally on your device (client-side), no personal data is ever transmitted to our servers, making it fully compliant with GDPR and other data residency requirements. All sanitization happens in your browser's RAM."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does it detect and remove API keys?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Clean My Prompt automatically detects and redacts standard patterns for AWS Keys, OpenAI Keys, GitHub Tokens, Google API Keys, and other common API key formats to prevent accidental leaks in your AI prompts."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What types of sensitive data can it detect?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Clean My Prompt detects and removes: emails, phone numbers, IP addresses, credit card numbers, SSNs, API keys, passwords, cryptocurrency addresses, personal names (using NLP), URLs, and custom patterns. All detection happens locally in your browser."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is my data sent to any server?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Clean My Prompt is 100% offline and client-side. All text processing happens in your browser's memory. No data is uploaded, transmitted, or stored on any server. You can even use it offline after the page loads."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I use it with ChatGPT, Claude, and other AI assistants?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! Clean My Prompt works with all AI assistants including ChatGPT, Claude, Gemini, Perplexity, and any other LLM. Simply paste your text, sanitize it, then copy the cleaned version to your AI tool."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does it work in multiple languages?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. The NLP-based name detection supports multiple languages including English, German, Spanish, French, and more. The regex patterns work universally for emails, IPs, credit cards, and other data types."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is it really free?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, Clean My Prompt is completely free and open source. No hidden fees, no premium tiers, no data collection. It's a privacy tool built for the community."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How fast is the sanitization process?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sanitization happens in real-time as you type. The tool processes text instantly using optimized regex patterns and NLP, typically within milliseconds even for large texts."
+              }
+            }
+          ]
+        }
       ]
     }
     </script>
